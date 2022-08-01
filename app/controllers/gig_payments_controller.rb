@@ -1,0 +1,2 @@
+class GigPaymentsController < ApplicationController
+end
