@@ -1,5 +1,5 @@
 class GigsController < ApplicationController
-  before_action :set_gig, only: [:show, :update, :destroy]
+  before_action :set_gig, only: [:show, :update, :destroy, :set_completed]
 
   # GET /gigs
   def index
@@ -40,6 +40,12 @@ class GigsController < ApplicationController
     @gig.destroy
 
     render jsonapi: "Destroyed gig ##{@gig.id}"
+  end
+
+  def set_completed
+    @gig.set_completed!
+
+    render jsonapi: @gig
   end
 
   private

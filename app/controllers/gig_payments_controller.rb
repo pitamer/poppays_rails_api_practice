@@ -1,5 +1,5 @@
 class GigPaymentsController < ApplicationController
-  before_action :set_gig_payment, only: [:show, :update, :destroy]
+  before_action :set_gig_payment, only: [:show, :update, :destroy, :set_completed]
 
   # GET /gig_payments
   def index
@@ -32,6 +32,12 @@ class GigPaymentsController < ApplicationController
     @gig_payment.destroy
 
     render jsonapi: "Destroyed gig payment ##{@gig_payment.id}"
+  end
+
+  def set_completed
+    @gig_payment.set_completed!
+
+    render jsonapi: @gig_payment
   end
 
   private
