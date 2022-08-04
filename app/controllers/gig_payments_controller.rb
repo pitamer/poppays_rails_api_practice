@@ -5,53 +5,37 @@ class GigPaymentsController < ApplicationController
   def index
     @gig_payments = GigPayment.all
 
-    if params[:sort]
-      @gig_payments = @gig_payments.order(params[:sort])
-    end
-
-    if params[:sort_direction]
-      @gig_payments = @gig_payments.order(params[:sort] => params[:sort_direction])
-    end
-
-    if params[:limit]
-      @gig_payments = @gig_payments.limit(params[:limit])
-    end
-
-    if params[:offset]
-      @gig_payments = @gig_payments.offset(params[:offset])
-    end
-
     render json: @gig_payments
   end
 
   # GET /gig_payments/1
   def show
+    @gig_payment = GigPayment.find(params[:id])
+
     render json: @gig_payment
   end
 
   # POST /gig_payments
   def create
-    @gig_payment = GigPayment.new(gig_payment_params)
+    @gig_payment = GigPayment.create(gig_id: params[:gig_id])
 
-    if @gig_payment.save
-      render json: @gig_payment, status: :created, location: @gig_payment
-    else
-      render json: @gig_payment.errors, status: :unprocessable_entity
-    end
+    render json: @gig_payment
   end
 
   # PATCH/PUT /gig_payments/1
   def update
-    if @gig_payment.update(gig_payment_params)
-      render json: @gig_payment
-    else
-      render json: @gig_payment.errors, status: :unprocessable_entity
-    end
+    @gig_payment = GigPayment.find(params[:id])
+    @gig_payment.update(gig_id: params[:gig_id], state: params[:state])
+
+    render json: "Updated gig payment ##{@gig_payment.id}"
   end
 
   # DELETE /gig_payments/1
   def destroy
+    @gig_payment = GigPayment.find(params[:id])
     @gig_payment.destroy
+
+    render json: "Destroyed gig payment ##{@gig_payment.id}"
   end
 
   private

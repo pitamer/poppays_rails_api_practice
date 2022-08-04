@@ -21,47 +21,49 @@ class CreatorsController < ApplicationController
       @creators = @creators.offset(params[:offset])
     end
 
-    render json: @creators
+    render jsonapi: @creators
   end
 
   # GET /creators/1
   def show
-    render json: @creator
+    # @creator = Creator.find(params[:id])
+
+    render jsonapi: @creator, include: params[:include]
   end
 
   # POST /creators
   def create
-    @creator = Creator.new(creator_params)
+    @creator = Creator.create(first_name: params[:first_name], last_name: params[:last_name])
 
     if @creator.save
-      render json: @creator, status: :created, location: @creator
+      render jsonapi: @creator
     else
-      render json: @creator.errors, status: :unprocessable_entity
+      render jsonapi: @creator.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /creators/1
   def update
-    if @creator.update(creator_params)
-      render json: @creator
-    else
-      render json: @creator.errors, status: :unprocessable_entity
-    end
+    @creator = Creator.find(params[:id])
+    @creator.update(first_name: params[:first_name], last_name: params[:last_name])
+
+    render jsonapi: "Updated creator ##{@creator.id}"
   end
 
   # DELETE /creators/1
   def destroy
-    @creator.destroy
-  end
-
-  private
-  # Use callbacks to share common setup or constraints between actions.
-  def set_creator
     @creator = Creator.find(params[:id])
+    @creator.destroy
+
+    render jsonapi: "Destroyed creator ##{@creator.id}"
   end
 
   # Only allow a trusted parameter "white list" through.
   def creator_params
     params.require(:creator).permit(:first_name, :last_name)
+  end
+
+  def set_creator
+    @creator = Creator.find(params[:id])
   end
 end

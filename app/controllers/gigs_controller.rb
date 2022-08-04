@@ -5,53 +5,45 @@ class GigsController < ApplicationController
   def index
     @gigs = Gig.all
 
-    if params[:sort]
-      @gigs = @gigs.order(params[:sort])
-    end
-
-    if params[:sort_direction]
-      @gigs = @gigs.order(params[:sort] => params[:sort_direction])
-    end
-
-    if params[:limit]
-      @gigs = @gigs.limit(params[:limit])
-    end
-
-    if params[:offset]
-      @gigs = @gigs.offset(params[:offset])
-    end
-
-    render json: @gigs
+    render jsonapi: @gigs
   end
 
   # GET /gigs/1
   def show
-    render json: @gig
+    @gig = Gig.find(params[:id])
+
+    render jsonapi: @gig, include: params[:include]
   end
 
   # POST /gigs
   def create
-    @gig = Gig.new(gig_params)
+    @gig = Gig.create(brand_name: params[:brand_name], creator_id: params[:creator_id])
 
     if @gig.save
-      render json: @gig, status: :created, location: @gig
+      render jsonapi: @gig
     else
-      render json: @gig.errors, status: :unprocessable_entity
+      render jsonapi: @gig.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /gigs/1
   def update
-    if @gig.update(gig_params)
-      render json: @gig
+    @gig = Gig.find(params[:id])
+    @gig.update(brand_name: params[:brand_name], creator_id: params[:creator_id], state: params[:state])
+
+    if @gig.save
+      render jsonapi: "Updated gig ##{@gig.id}"
     else
-      render json: @gig.errors, status: :unprocessable_entity
+      render jsonapi: @gig.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /gigs/1
   def destroy
+    @gig = Gig.find(params[:id])
     @gig.destroy
+
+    render jsonapi: "Destroyed gig ##{@gig.id}"
   end
 
   private
