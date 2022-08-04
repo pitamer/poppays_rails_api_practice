@@ -7,6 +7,8 @@ class CreatorsController < ApplicationController
 
     if params[:sort]
       @creators = @creators.order(params[:sort])
+    else
+      params[:sort] = "id"  # TODO: Implement this default param more elegantly if there's any time left
     end
 
     if params[:sort_direction]
@@ -26,8 +28,6 @@ class CreatorsController < ApplicationController
 
   # GET /creators/1
   def show
-    # @creator = Creator.find(params[:id])
-
     render jsonapi: @creator, include: params[:include]
   end
 
@@ -44,7 +44,6 @@ class CreatorsController < ApplicationController
 
   # PATCH/PUT /creators/1
   def update
-    @creator = Creator.find(params[:id])
     @creator.update(first_name: params[:first_name], last_name: params[:last_name])
 
     render jsonapi: "Updated creator ##{@creator.id}"
@@ -52,7 +51,6 @@ class CreatorsController < ApplicationController
 
   # DELETE /creators/1
   def destroy
-    @creator = Creator.find(params[:id])
     @creator.destroy
 
     render jsonapi: "Destroyed creator ##{@creator.id}"

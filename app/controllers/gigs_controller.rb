@@ -10,8 +10,6 @@ class GigsController < ApplicationController
 
   # GET /gigs/1
   def show
-    @gig = Gig.find(params[:id])
-
     render jsonapi: @gig, include: params[:include]
   end
 
@@ -28,7 +26,6 @@ class GigsController < ApplicationController
 
   # PATCH/PUT /gigs/1
   def update
-    @gig = Gig.find(params[:id])
     @gig.update(brand_name: params[:brand_name], creator_id: params[:creator_id], state: params[:state])
 
     if @gig.save
@@ -40,7 +37,6 @@ class GigsController < ApplicationController
 
   # DELETE /gigs/1
   def destroy
-    @gig = Gig.find(params[:id])
     @gig.destroy
 
     render jsonapi: "Destroyed gig ##{@gig.id}"
