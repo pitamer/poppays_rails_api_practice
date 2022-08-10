@@ -26,9 +26,7 @@ class GigsController < ApplicationController
 
   # PATCH/PUT /gigs/1
   def update
-    @gig.update(brand_name: params[:brand_name], creator_id: params[:creator_id], state: params[:state])
-
-    if @gig.save
+    if @gig.update(gig_params)
       render jsonapi: "Updated gig ##{@gig.id}"
     else
       render jsonapi: @gig.errors, status: :unprocessable_entity
@@ -57,6 +55,6 @@ class GigsController < ApplicationController
 
   # Only allow a trusted parameter "white list" through.
   def gig_params
-    params.require(:gig).permit(:title, :description, :price, :creator_id, :gig_category_id)
+    params.require(:gig).permit(:brand_name, :state, :creator_id)
   end
 end
