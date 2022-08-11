@@ -5,6 +5,10 @@ class ApplicationController < ActionController::API
     render json: { error: exception.message }.to_json, status: :not_found
   end
 
+  def handle_route_not_found(exception)  # TODO: Understand why this doesn't work
+    render json: { error: exception.message }.to_json, status: :not_found
+  end
+
   def handle_invalid_transition(exception)
     render json: { error: exception.message, traces: exception.backtrace }.to_json, status: :bad_request
   end
@@ -14,6 +18,7 @@ class ApplicationController < ActionController::API
   end
 
   rescue_from ::ActiveRecord::RecordNotFound, with: :handle_record_not_found
+  rescue_from ::ActionController::RoutingError, :with => :handle_route_not_found  # TODO: Understand why this doesn't work
   rescue_from ::AASM::InvalidTransition, with: :handle_invalid_transition
   rescue_from ::NameError, with: :handle_internal_error
 end

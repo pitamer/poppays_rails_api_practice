@@ -17,7 +17,7 @@ RSpec.describe Gig, type: :model do
     #  when they are created outside. I don't like it. Find a way to make it pass both ways.
 
     gig = create_mock_gig
-    gig.set_completed
+    gig.complete!
 
     gig_payment = GigPayment.find_by(gig_id: gig.id)
     expect(gig_payment).to be_a_new GigPayment

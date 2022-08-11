@@ -7,8 +7,8 @@ class GigPayment < ApplicationRecord
     state :pending, initial: true
     state :completed
 
-    event :set_completed do
-      transitions from: :pending, to: :completed, after: Proc.new { self.gig.set_paid! }
+    event :complete do
+      transitions from: :pending, to: :completed, after: Proc.new { self.gig.pay! }
     end
   end
 end
